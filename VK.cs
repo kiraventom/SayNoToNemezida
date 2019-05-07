@@ -28,7 +28,7 @@ namespace SNTN
                     {
                         barProgress.Report(i + 1);
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Генерируем подпись...");
-                        var caption = Constants.Strings.CaptionThatFucksNemezida;
+                        var caption = Constants.Strings.Caption;
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Редактируем картинку...");
                         var editedPhoto = Photos.EditPhoto(photos[i]);
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Конвертируем картинку...");

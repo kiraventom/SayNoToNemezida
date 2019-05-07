@@ -7,8 +7,6 @@ namespace SNTN
 {
     public partial class MainForm : Form
     {
-        private static DateTime Date { get; set; } = Constants.Dates.CorrectMinimumDateTime;
-
         public MainForm()
         {
             InitializeComponent();
@@ -19,6 +17,8 @@ namespace SNTN
 
             OpenCalendarButton.Text = Constants.Dates.CorrectMinimumDateTime.ToString("dd/MM/yyyy");
         }
+
+        private static DateTime Date { get; set; } = Constants.Dates.CorrectMinimumDateTime;
 
         private void SaveSettings(long ownerId, long groupId, string token, string path)
         {
@@ -44,7 +44,7 @@ namespace SNTN
             if (!isAuthorized)
             {
                 MessageBox.Show(caption: "Ошибка авторизации",
-                                    text: "Данные некорректны",
+                                text: "Данные некорректны",
                                 buttons: MessageBoxButtons.OK);
             }
             return isAuthorized;
@@ -69,8 +69,8 @@ namespace SNTN
             if (!isThereEnoughPhotos)
             {
                 MessageBox.Show("Недостаточно файлов в папке. " +
-                                     $"Необходимо минимум {amount} файлов" +
-                                     " формата jpg, jpeg и/или png");
+                                $"Необходимо минимум {amount} файлов" +
+                                " формата jpg, jpeg и/или png");
             }
             return isThereEnoughPhotos;
         }
@@ -78,8 +78,8 @@ namespace SNTN
         private void AskToDelete(string path, int amount)
         {
             var dr = MessageBox.Show(caption: "Подтвердите удаление",
-                                text: "Картинки загружены в отложку. Удалить их из папки?",
-                                buttons: MessageBoxButtons.YesNo);
+                                     text: "Картинки загружены в отложку. Удалить их из папки?",
+                                     buttons: MessageBoxButtons.YesNo);
             if (dr == DialogResult.Yes)
             {
                 var di = new System.IO.DirectoryInfo(path);
@@ -95,15 +95,15 @@ namespace SNTN
         {
             System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
             string path = System.IO.Path.GetDirectoryName(asm.Location) + 
-                          $"{DateTime.Now.ToString("hh-mm--dd-MM")}.txt";
+                          $"{DateTime.Now.ToString("hh-mm--dd-MM")}.log";
             System.IO.File.CreateText(path);
             using (var sw = new System.IO.StreamWriter(path))
             {
                 sw.WriteLine(e.StackTrace);
             };
-            MessageBox.Show("Произошла ашипка!\r" +
-                            $"Лог сохранён в {path} (покажите его Але)\r" +
-                            $"Программа попробует продолжить работу, но ниче не обещает");
+            MessageBox.Show("Произошла ошибка!\r" +
+                            $"Лог сохранён в {path}.\r" +
+                            $"Программа попробует продолжить работу.");
         }
 
         private async void MainButton_Click(object sender, EventArgs e)
@@ -161,11 +161,6 @@ namespace SNTN
             {
                 MainButton.Enabled = false;
             }
-        }
-
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-
         }
 
         private void OpenCalendarButton_Click(object sender, EventArgs e)

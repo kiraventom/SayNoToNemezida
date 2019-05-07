@@ -5,11 +5,6 @@ namespace Extensions
 {
     public static class StringExtensions
     {
-        /// <summary>
-        /// Removes all non-digit chars from string and returns result as int
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
         public static int ToInt(this string str)
         {
             for (int i = str.Length - 1; i >= 0; --i)
@@ -21,10 +16,7 @@ namespace Extensions
             }
             return int.Parse(str);
         }
-
-        /// <summary>
-        /// Преобразует строку формата dd/MM/yyyy в DateTime
-        /// </summary>
+        
         public static DateTime ToDate(this string str, char separator)
         {
             var separatorIndex = str.IndexOf(separator);
