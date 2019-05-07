@@ -29,13 +29,14 @@ namespace SNTN
             Properties.Settings.Default.Save();
         }
 
-        private void SwitchControlsEnabled(bool state)
+        private void SwitchControls(bool isWorking)
         {
-            GroupIdTextBox.Enabled = state;
-            TokenTextBox.Enabled = state;
-            MainButton.Enabled = state;
-            ChoosePathButton.Enabled = state;
-            OpenCalendarButton.Enabled = state;
+            GroupIdTextBox.Enabled = !isWorking;
+            TokenTextBox.Enabled = !isWorking;
+            //MainButton.Text = isWorking ? "Отменить" : "Начать";
+            MainButton.Enabled = !isWorking;
+            ChoosePathButton.Enabled = !isWorking;
+            OpenCalendarButton.Enabled = !isWorking;
         }
 
         private bool TryAuth(VkNet.VkApi api, string token)
@@ -105,7 +106,7 @@ namespace SNTN
                             $"Лог сохранён в {path}.\r" +
                             $"Программа попробует продолжить работу.");
         }
-
+        
         private async void MainButton_Click(object sender, EventArgs e)
         {
             var barProgress = new Progress<int>(i => PostingProgressBar.Value = i);
@@ -118,7 +119,8 @@ namespace SNTN
             GroupIdTextBox.Text = groupId.ToString();
             if (TryAuth(api, token))
             {
-                SwitchControlsEnabled(false);
+                SwitchControls(false);
+                
                 SaveSettings(ownerId, groupId, token, pathToPhotos);
                 var curricular = Core.Curricular.GetCurricular(Date);
                 int postsAmount = curricular.Length;
@@ -130,7 +132,7 @@ namespace SNTN
                         if (i)
                         {
                             AskToDelete(pathToPhotos, postsAmount);
-                            SwitchControlsEnabled(true);
+                            SwitchControls(true);
                         }
                     });
                     await Task.Factory.StartNew(() =>

@@ -41,9 +41,9 @@
             this.ChoosePathButton = new System.Windows.Forms.Button();
             this.PostingProgressBar = new System.Windows.Forms.ProgressBar();
             this.OpenCalendarButton = new System.Windows.Forms.Button();
-            this.FolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.StatusTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.StatusLabel = new System.Windows.Forms.Label();
+            this.FolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.MainTableLayoutPanel.SuspendLayout();
             this.PathToPhotosTableLayoutPanel.SuspendLayout();
             this.StatusTableLayoutPanel.SuspendLayout();
@@ -122,13 +122,13 @@
             // 
             this.MainButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainButton.Enabled = false;
-            this.MainButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.MainButton.ForeColor = System.Drawing.Color.LightCoral;
+            this.MainButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.MainButton.ForeColor = System.Drawing.Color.Black;
             this.MainButton.Location = new System.Drawing.Point(3, 256);
             this.MainButton.Name = "MainButton";
             this.MainButton.Size = new System.Drawing.Size(233, 34);
             this.MainButton.TabIndex = 4;
-            this.MainButton.Text = "♥";
+            this.MainButton.Text = "Начать";
             this.MainButton.UseVisualStyleBackColor = true;
             this.MainButton.Click += new System.EventHandler(this.MainButton_Click);
             // 
