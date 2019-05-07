@@ -7,24 +7,26 @@ namespace SNTN
 {
     public partial class MainForm : Form
     {
-        public MainForm()
+        public MainForm(string token)
         {
             InitializeComponent();
             
-            GroupIdTextBox.Text = Properties.Settings.Default.GroupId.ToString();
-            TokenTextBox.Text = Properties.Settings.Default.Token;
+            api.Authorize(new VkNet.Model.ApiAuthParams
+            {
+                AccessToken = token
+            });
+            //GroupIdTextBox.Text = Properties.Settings.Default.GroupId.ToString();
             PathToPhotosTextBox.Text = Properties.Settings.Default.PhotosDirPath;
 
             OpenCalendarButton.Text = Constants.Dates.CorrectMinimumDateTime.ToString("dd/MM/yyyy");
         }
 
+        VkNet.VkApi api = new VkNet.VkApi();
+
         private static DateTime Date { get; set; } = Constants.Dates.CorrectMinimumDateTime;
 
-        private void SaveSettings(long ownerId, long groupId, string token, string path)
+        private void SaveSettings(string path)
         {
-            Properties.Settings.Default.OwnerId = ownerId;
-            Properties.Settings.Default.GroupId = groupId;
-            Properties.Settings.Default.Token = token;
             Properties.Settings.Default.PhotosDirPath = path;
             Properties.Settings.Default.Save();
         }
@@ -32,23 +34,10 @@ namespace SNTN
         private void SwitchControls(bool isWorking)
         {
             GroupIdTextBox.Enabled = !isWorking;
-            TokenTextBox.Enabled = !isWorking;
             //MainButton.Text = isWorking ? "Отменить" : "Начать";
             MainButton.Enabled = !isWorking;
             ChoosePathButton.Enabled = !isWorking;
             OpenCalendarButton.Enabled = !isWorking;
-        }
-
-        private bool TryAuth(VkNet.VkApi api, string token)
-        {
-            bool isAuthorized = Core.VK.AuthViaToken(api, token);
-            if (!isAuthorized)
-            {
-                MessageBox.Show(caption: "Ошибка авторизации",
-                                text: "Данные некорректны",
-                                buttons: MessageBoxButtons.OK);
-            }
-            return isAuthorized;
         }
             
         private bool IsThereEnoughPhotos(string path, int amount)
@@ -111,35 +100,30 @@ namespace SNTN
         {
             var barProgress = new Progress<int>(i => PostingProgressBar.Value = i);
             var statusProgress = new Progress<string>(i => StatusLabel.Text = i);
-            VkNet.VkApi api = new VkNet.VkApi();
             long groupId = GroupIdTextBox.Text.ToInt();
             long ownerId = groupId * -1;
-            string token = TokenTextBox.Text;
             string pathToPhotos = PathToPhotosTextBox.Text;
             GroupIdTextBox.Text = groupId.ToString();
-            if (TryAuth(api, token))
-            {
-                SwitchControls(false);
+            SwitchControls(false);
                 
-                SaveSettings(ownerId, groupId, token, pathToPhotos);
-                var curricular = Core.Curricular.GetCurricular(Date);
-                int postsAmount = curricular.Length;
-                PostingProgressBar.Maximum = postsAmount;
-                if (IsThereEnoughPhotos(pathToPhotos, postsAmount))
+            SaveSettings(pathToPhotos);
+            var curricular = Core.Curricular.GetCurricular(Date);
+            int postsAmount = curricular.Length;
+            PostingProgressBar.Maximum = postsAmount;
+            if (IsThereEnoughPhotos(pathToPhotos, postsAmount))
+            {
+                var finishedProgress = new Progress<bool>(i =>
                 {
-                    var finishedProgress = new Progress<bool>(i =>
+                    if (i)
                     {
-                        if (i)
-                        {
-                            AskToDelete(pathToPhotos, postsAmount);
-                            SwitchControls(true);
-                        }
-                    });
-                    await Task.Factory.StartNew(() =>
-                        Core.VK.AddPosts(api, pathToPhotos, curricular, Date, 
-                                         barProgress, statusProgress, finishedProgress),
-                        TaskCreationOptions.LongRunning);
-                }
+                        AskToDelete(pathToPhotos, postsAmount);
+                        SwitchControls(true);
+                    }
+                });
+                await Task.Factory.StartNew(() =>
+                    Core.VK.AddPosts(api, pathToPhotos, curricular, Date, 
+                                        barProgress, statusProgress, finishedProgress),
+                    TaskCreationOptions.LongRunning);
             }
         }
 
@@ -154,8 +138,7 @@ namespace SNTN
         private void PathToPhotosTextBox_TextChanged(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(PathToPhotosTextBox.Text) &&
-                !string.IsNullOrEmpty(GroupIdTextBox.Text) &&
-                !string.IsNullOrEmpty(TokenTextBox.Text))
+                !string.IsNullOrEmpty(GroupIdTextBox.Text))
             {
                 MainButton.Enabled = true;
             }

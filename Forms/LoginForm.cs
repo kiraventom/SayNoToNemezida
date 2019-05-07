@@ -40,8 +40,6 @@ namespace SNTN
             }
             else
             {
-                //string login = LoginTextBox.Text;
-                //string password = PasswordTextBox.Text;
                 string appId = AppIdTextBox.Text;
                 var sb = new System.Text.StringBuilder();
                 sb.Append(@"https://oauth.vk.com/authorize?client_id=");
@@ -51,11 +49,12 @@ namespace SNTN
                 string token = string.Empty;
                 if (TryLogin(ub.Uri, out token))
                 {
-                    string asdasd = "";
-                }
-                else
-                {
-
+                    Hide();
+                    using (var mainForm = new MainForm(token))
+                    {
+                        mainForm.ShowDialog();
+                    }
+                    Close();
                 }
             }
         }

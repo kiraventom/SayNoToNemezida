@@ -32,8 +32,6 @@
             this.MainTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.GroupIdLabel = new System.Windows.Forms.Label();
             this.GroupIdTextBox = new System.Windows.Forms.TextBox();
-            this.TokenLabel = new System.Windows.Forms.Label();
-            this.TokenTextBox = new System.Windows.Forms.TextBox();
             this.MainButton = new System.Windows.Forms.Button();
             this.PathToPhotosLabel = new System.Windows.Forms.Label();
             this.PathToPhotosTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
@@ -55,20 +53,16 @@
             this.MainTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.MainTableLayoutPanel.Controls.Add(this.GroupIdLabel, 0, 0);
             this.MainTableLayoutPanel.Controls.Add(this.GroupIdTextBox, 0, 1);
-            this.MainTableLayoutPanel.Controls.Add(this.TokenLabel, 0, 2);
-            this.MainTableLayoutPanel.Controls.Add(this.TokenTextBox, 0, 3);
-            this.MainTableLayoutPanel.Controls.Add(this.MainButton, 0, 9);
-            this.MainTableLayoutPanel.Controls.Add(this.PathToPhotosLabel, 0, 4);
-            this.MainTableLayoutPanel.Controls.Add(this.PathToPhotosTableLayoutPanel, 0, 5);
-            this.MainTableLayoutPanel.Controls.Add(this.PostingProgressBar, 0, 7);
-            this.MainTableLayoutPanel.Controls.Add(this.OpenCalendarButton, 0, 6);
-            this.MainTableLayoutPanel.Controls.Add(this.StatusTableLayoutPanel, 0, 8);
+            this.MainTableLayoutPanel.Controls.Add(this.MainButton, 0, 7);
+            this.MainTableLayoutPanel.Controls.Add(this.PathToPhotosLabel, 0, 2);
+            this.MainTableLayoutPanel.Controls.Add(this.PathToPhotosTableLayoutPanel, 0, 3);
+            this.MainTableLayoutPanel.Controls.Add(this.PostingProgressBar, 0, 5);
+            this.MainTableLayoutPanel.Controls.Add(this.OpenCalendarButton, 0, 4);
+            this.MainTableLayoutPanel.Controls.Add(this.StatusTableLayoutPanel, 0, 6);
             this.MainTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainTableLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.MainTableLayoutPanel.Name = "MainTableLayoutPanel";
-            this.MainTableLayoutPanel.RowCount = 10;
-            this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.MainTableLayoutPanel.RowCount = 8;
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
@@ -77,7 +71,9 @@
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.MainTableLayoutPanel.Size = new System.Drawing.Size(239, 293);
+            this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.MainTableLayoutPanel.Size = new System.Drawing.Size(239, 251);
             this.MainTableLayoutPanel.TabIndex = 0;
             // 
             // GroupIdLabel
@@ -99,32 +95,13 @@
             this.GroupIdTextBox.Size = new System.Drawing.Size(233, 20);
             this.GroupIdTextBox.TabIndex = 1;
             // 
-            // TokenLabel
-            // 
-            this.TokenLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.TokenLabel.AutoSize = true;
-            this.TokenLabel.Location = new System.Drawing.Point(99, 56);
-            this.TokenLabel.Name = "TokenLabel";
-            this.TokenLabel.Size = new System.Drawing.Size(41, 13);
-            this.TokenLabel.TabIndex = 2;
-            this.TokenLabel.Text = "Token:";
-            // 
-            // TokenTextBox
-            // 
-            this.TokenTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TokenTextBox.Location = new System.Drawing.Point(3, 78);
-            this.TokenTextBox.MaxLength = 90;
-            this.TokenTextBox.Name = "TokenTextBox";
-            this.TokenTextBox.Size = new System.Drawing.Size(233, 20);
-            this.TokenTextBox.TabIndex = 3;
-            // 
             // MainButton
             // 
             this.MainButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainButton.Enabled = false;
             this.MainButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.MainButton.ForeColor = System.Drawing.Color.Black;
-            this.MainButton.Location = new System.Drawing.Point(3, 256);
+            this.MainButton.Location = new System.Drawing.Point(3, 214);
             this.MainButton.Name = "MainButton";
             this.MainButton.Size = new System.Drawing.Size(233, 34);
             this.MainButton.TabIndex = 4;
@@ -136,7 +113,7 @@
             // 
             this.PathToPhotosLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.PathToPhotosLabel.AutoSize = true;
-            this.PathToPhotosLabel.Location = new System.Drawing.Point(45, 106);
+            this.PathToPhotosLabel.Location = new System.Drawing.Point(45, 56);
             this.PathToPhotosLabel.Name = "PathToPhotosLabel";
             this.PathToPhotosLabel.Size = new System.Drawing.Size(149, 13);
             this.PathToPhotosLabel.TabIndex = 5;
@@ -150,7 +127,7 @@
             this.PathToPhotosTableLayoutPanel.Controls.Add(this.PathToPhotosTextBox, 0, 0);
             this.PathToPhotosTableLayoutPanel.Controls.Add(this.ChoosePathButton, 1, 0);
             this.PathToPhotosTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PathToPhotosTableLayoutPanel.Location = new System.Drawing.Point(3, 128);
+            this.PathToPhotosTableLayoutPanel.Location = new System.Drawing.Point(3, 78);
             this.PathToPhotosTableLayoutPanel.Name = "PathToPhotosTableLayoutPanel";
             this.PathToPhotosTableLayoutPanel.RowCount = 1;
             this.PathToPhotosTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
@@ -183,7 +160,7 @@
             // PostingProgressBar
             // 
             this.PostingProgressBar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PostingProgressBar.Location = new System.Drawing.Point(3, 198);
+            this.PostingProgressBar.Location = new System.Drawing.Point(3, 148);
             this.PostingProgressBar.Maximum = 17;
             this.PostingProgressBar.Name = "PostingProgressBar";
             this.PostingProgressBar.Size = new System.Drawing.Size(233, 24);
@@ -193,7 +170,7 @@
             // OpenCalendarButton
             // 
             this.OpenCalendarButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OpenCalendarButton.Location = new System.Drawing.Point(3, 163);
+            this.OpenCalendarButton.Location = new System.Drawing.Point(3, 113);
             this.OpenCalendarButton.Name = "OpenCalendarButton";
             this.OpenCalendarButton.Size = new System.Drawing.Size(233, 29);
             this.OpenCalendarButton.TabIndex = 9;
@@ -208,18 +185,18 @@
             this.StatusTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 3.433476F));
             this.StatusTableLayoutPanel.Controls.Add(this.StatusLabel, 0, 0);
             this.StatusTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.StatusTableLayoutPanel.Location = new System.Drawing.Point(3, 228);
+            this.StatusTableLayoutPanel.Location = new System.Drawing.Point(3, 178);
             this.StatusTableLayoutPanel.Name = "StatusTableLayoutPanel";
             this.StatusTableLayoutPanel.RowCount = 1;
             this.StatusTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.StatusTableLayoutPanel.Size = new System.Drawing.Size(233, 22);
+            this.StatusTableLayoutPanel.Size = new System.Drawing.Size(233, 30);
             this.StatusTableLayoutPanel.TabIndex = 10;
             // 
             // StatusLabel
             // 
             this.StatusLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.StatusLabel.AutoSize = true;
-            this.StatusLabel.Location = new System.Drawing.Point(3, 4);
+            this.StatusLabel.Location = new System.Drawing.Point(3, 8);
             this.StatusLabel.Name = "StatusLabel";
             this.StatusLabel.Size = new System.Drawing.Size(0, 13);
             this.StatusLabel.TabIndex = 11;
@@ -229,7 +206,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(239, 293);
+            this.ClientSize = new System.Drawing.Size(239, 251);
             this.Controls.Add(this.MainTableLayoutPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -253,8 +230,6 @@
         private System.Windows.Forms.TableLayoutPanel MainTableLayoutPanel;
         private System.Windows.Forms.Label GroupIdLabel;
         private System.Windows.Forms.TextBox GroupIdTextBox;
-        private System.Windows.Forms.Label TokenLabel;
-        private System.Windows.Forms.TextBox TokenTextBox;
         private System.Windows.Forms.Button MainButton;
         private System.Windows.Forms.Label PathToPhotosLabel;
         private System.Windows.Forms.TableLayoutPanel PathToPhotosTableLayoutPanel;

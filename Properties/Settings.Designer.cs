@@ -26,60 +26,12 @@ namespace SNTN.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public long OwnerId {
-            get {
-                return ((long)(this["OwnerId"]));
-            }
-            set {
-                this["OwnerId"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public long GroupId {
-            get {
-                return ((long)(this["GroupId"]));
-            }
-            set {
-                this["GroupId"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public string Token {
-            get {
-                return ((string)(this["Token"]));
-            }
-            set {
-                this["Token"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public string PhotosDirPath {
             get {
                 return ((string)(this["PhotosDirPath"]));
             }
             set {
                 this["PhotosDirPath"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1753-01-01")]
-        public global::System.DateTime DateTime {
-            get {
-                return ((global::System.DateTime)(this["DateTime"]));
-            }
-            set {
-                this["DateTime"] = value;
             }
         }
     }

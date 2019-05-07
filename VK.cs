@@ -80,23 +80,6 @@ namespace SNTN
                     return await response.Content.ReadAsStringAsync();
                 }
             }
-
-            public static bool AuthViaToken(VkNet.VkApi api, string token)
-            {
-                try
-                {
-                    api.Authorize(new VkNet.Model.ApiAuthParams
-                    {
-                        AccessToken = token
-                    });
-                }
-                catch
-                {
-
-                }
-
-                return api.IsAuthorized;
-            }
         }
     }
 }
