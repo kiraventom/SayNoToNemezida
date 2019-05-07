@@ -41,10 +41,12 @@
             this.ChoosePathButton = new System.Windows.Forms.Button();
             this.PostingProgressBar = new System.Windows.Forms.ProgressBar();
             this.OpenCalendarButton = new System.Windows.Forms.Button();
-            this.StatusLabel = new System.Windows.Forms.Label();
             this.FolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.StatusTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.StatusLabel = new System.Windows.Forms.Label();
             this.MainTableLayoutPanel.SuspendLayout();
             this.PathToPhotosTableLayoutPanel.SuspendLayout();
+            this.StatusTableLayoutPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTableLayoutPanel
@@ -60,7 +62,7 @@
             this.MainTableLayoutPanel.Controls.Add(this.PathToPhotosTableLayoutPanel, 0, 5);
             this.MainTableLayoutPanel.Controls.Add(this.PostingProgressBar, 0, 7);
             this.MainTableLayoutPanel.Controls.Add(this.OpenCalendarButton, 0, 6);
-            this.MainTableLayoutPanel.Controls.Add(this.StatusLabel, 0, 8);
+            this.MainTableLayoutPanel.Controls.Add(this.StatusTableLayoutPanel, 0, 8);
             this.MainTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainTableLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.MainTableLayoutPanel.Name = "MainTableLayoutPanel";
@@ -199,14 +201,29 @@
             this.OpenCalendarButton.UseVisualStyleBackColor = true;
             this.OpenCalendarButton.Click += new System.EventHandler(this.OpenCalendarButton_Click);
             // 
+            // StatusTableLayoutPanel
+            // 
+            this.StatusTableLayoutPanel.ColumnCount = 2;
+            this.StatusTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 96.56652F));
+            this.StatusTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 3.433476F));
+            this.StatusTableLayoutPanel.Controls.Add(this.StatusLabel, 0, 0);
+            this.StatusTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.StatusTableLayoutPanel.Location = new System.Drawing.Point(3, 228);
+            this.StatusTableLayoutPanel.Name = "StatusTableLayoutPanel";
+            this.StatusTableLayoutPanel.RowCount = 1;
+            this.StatusTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.StatusTableLayoutPanel.Size = new System.Drawing.Size(233, 22);
+            this.StatusTableLayoutPanel.TabIndex = 10;
+            // 
             // StatusLabel
             // 
-            this.StatusLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.StatusLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.StatusLabel.AutoSize = true;
-            this.StatusLabel.Location = new System.Drawing.Point(119, 232);
+            this.StatusLabel.Location = new System.Drawing.Point(3, 4);
             this.StatusLabel.Name = "StatusLabel";
             this.StatusLabel.Size = new System.Drawing.Size(0, 13);
-            this.StatusLabel.TabIndex = 10;
+            this.StatusLabel.TabIndex = 11;
+            this.StatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // MainForm
             // 
@@ -226,6 +243,8 @@
             this.MainTableLayoutPanel.PerformLayout();
             this.PathToPhotosTableLayoutPanel.ResumeLayout(false);
             this.PathToPhotosTableLayoutPanel.PerformLayout();
+            this.StatusTableLayoutPanel.ResumeLayout(false);
+            this.StatusTableLayoutPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -245,6 +264,7 @@
         private System.Windows.Forms.Button ChoosePathButton;
         private System.Windows.Forms.ProgressBar PostingProgressBar;
         private System.Windows.Forms.Button OpenCalendarButton;
+        private System.Windows.Forms.TableLayoutPanel StatusTableLayoutPanel;
         private System.Windows.Forms.Label StatusLabel;
     }
 }

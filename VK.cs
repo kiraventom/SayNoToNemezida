@@ -15,7 +15,8 @@ namespace SNTN
                                                     (int h, int m)[] curricular,
                                                     DateTime publishDate,
                                                     IProgress<int> barProgress,
-                                                    IProgress<string> statusProgress)
+                                                    IProgress<string> statusProgress,
+                                                    IProgress<bool> finishedProgress)
             {
                 int postsAmount = curricular.Length;
                 Bitmap[] photos = Photos.GetPhotosFromPath(pathToDir, postsAmount);
@@ -26,19 +27,19 @@ namespace SNTN
                     try
                     {
                         barProgress.Report(i + 1);
-                        statusProgress.Report("Генерируем подпись...");
+                        statusProgress.Report($"[{i + 1}/{postsAmount}] Генерируем подпись...");
                         var caption = Constants.Strings.CaptionThatFucksNemezida;
-                        statusProgress.Report("Редактируем картинку...");
+                        statusProgress.Report($"[{i + 1}/{postsAmount}] Редактируем картинку...");
                         var editedPhoto = Photos.EditPhoto(photos[i]);
-                        statusProgress.Report("Конвертируем картинку...");
+                        statusProgress.Report($"[{i + 1}/{postsAmount}] Конвертируем картинку...");
                         var imageAsByteArray = editedPhoto.ToByteArray();
-                        statusProgress.Report("Получаем адрес сервера...");
+                        statusProgress.Report($"[{i + 1}/{postsAmount}] Получаем адрес сервера...");
                         var usi = api.Photo.GetWallUploadServer(Properties.Settings.Default.GroupId);
-                        statusProgress.Report("Загружаем картинку на сервер...");
+                        statusProgress.Report($"[{i + 1}/{postsAmount}] Загружаем картинку на сервер...");
                         var rspns = await UploadImage(usi.UploadUrl, imageAsByteArray);
-                        statusProgress.Report("Получаем адрес картинки...");
+                        statusProgress.Report($"[{i + 1}/{postsAmount}] Получаем адрес картинки...");
                         var wallPhotos = api.Photo.SaveWallPhoto(rspns, null, (ulong)Properties.Settings.Default.GroupId);
-                        statusProgress.Report("Постим...");
+                        statusProgress.Report($"[{i + 1}/{postsAmount}] Постим...");
                         api.Wall.Post(new VkNet.Model.RequestParams.WallPostParams
                         {
                             OwnerId = Properties.Settings.Default.OwnerId,
@@ -60,6 +61,7 @@ namespace SNTN
                         continue;
                     }
                 }
+                finishedProgress.Report(true);
                 return;
             }
 

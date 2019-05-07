@@ -125,12 +125,19 @@ namespace SNTN
                 PostingProgressBar.Maximum = postsAmount;
                 if (IsThereEnoughPhotos(pathToPhotos, postsAmount))
                 {
+                    var finishedProgress = new Progress<bool>(i =>
+                    {
+                        if (i)
+                        {
+                            AskToDelete(pathToPhotos, postsAmount);
+                            SwitchControlsEnabled(true);
+                        }
+                    });
                     await Task.Factory.StartNew(() =>
-                        Core.VK.AddPosts(api, pathToPhotos, curricular, Date, barProgress, statusProgress),
+                        Core.VK.AddPosts(api, pathToPhotos, curricular, Date, 
+                                         barProgress, statusProgress, finishedProgress),
                         TaskCreationOptions.LongRunning);
                 }
-                AskToDelete(pathToPhotos, postsAmount);
-                SwitchControlsEnabled(true);
             }
         }
 
