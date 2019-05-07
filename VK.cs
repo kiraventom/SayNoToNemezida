@@ -15,7 +15,8 @@ namespace SNTN
                                                     (int h, int m)[] curricular,
                                                     DateTime publishDate,
                                                     IProgress<int> barProgress,
-                                                    IProgress<string> statusProgress)
+                                                    IProgress<string> statusProgress,
+                                                    IProgress<bool> finishedProgress)
             {
                 int postsAmount = curricular.Length;
                 Bitmap[] photos = Photos.GetPhotosFromPath(pathToDir, postsAmount);
@@ -60,6 +61,7 @@ namespace SNTN
                         continue;
                     }
                 }
+                finishedProgress.Report(true);
                 return;
             }
 

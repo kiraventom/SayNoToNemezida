@@ -26,7 +26,7 @@ namespace SNTN
             {
                 get
                 {
-                    if (DateTime.Now.Hour < 23 && DateTime.Now.Minute < 00 && DateTime.Now.Second < 00)
+                    if (DateTime.Now.Hour < 23)
                     {
                         return DateTime.Now;
                     }
