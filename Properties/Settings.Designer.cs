@@ -34,5 +34,17 @@ namespace SNTN.Properties {
                 this["PhotosDirPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AppId {
+            get {
+                return ((string)(this["AppId"]));
+            }
+            set {
+                this["AppId"] = value;
+            }
+        }
     }
 }

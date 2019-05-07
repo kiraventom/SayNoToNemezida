@@ -70,6 +70,7 @@
             // LoginButton
             // 
             this.LoginButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.LoginButton.Enabled = false;
             this.LoginButton.Location = new System.Drawing.Point(68, 78);
             this.LoginButton.Name = "LoginButton";
             this.LoginButton.Size = new System.Drawing.Size(75, 23);
