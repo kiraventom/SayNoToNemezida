@@ -17,7 +17,8 @@ namespace SNTN
                                                     long groupId,
                                                     IProgress<int> barProgress,
                                                     IProgress<string> statusProgress,
-                                                    IProgress<bool> finishedProgress)
+                                                    IProgress<int> finishedProgress,
+                                                    System.Threading.CancellationToken ct)
             {
                 int postsAmount = curricular.Length;
                 Bitmap[] photos = Photos.GetPhotosFromPath(pathToDir, postsAmount);
@@ -38,9 +39,17 @@ namespace SNTN
                         var usi = api.Photo.GetWallUploadServer(groupId);
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Загружаем картинку на сервер...");
                         var rspns = await UploadImage(usi.UploadUrl, imageAsByteArray);
+                        if (ct.IsCancellationRequested)
+                        {
+                            barProgress.Report(0);
+                            statusProgress.Report(string.Empty);
+                            finishedProgress.Report(i);
+                            return;
+                        }
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Получаем адрес картинки...");
                         var wallPhotos = api.Photo.SaveWallPhoto(rspns, null, (ulong)groupId);
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Постим...");
+                        var c = curricular[i];
                         api.Wall.Post(new VkNet.Model.RequestParams.WallPostParams
                         {
                             OwnerId = -groupId,
@@ -62,7 +71,9 @@ namespace SNTN
                         continue;
                     }
                 }
-                finishedProgress.Report(true);
+                barProgress.Report(0);
+                statusProgress.Report(string.Empty);
+                finishedProgress.Report(postsAmount);
                 return;
             }
 

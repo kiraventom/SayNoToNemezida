@@ -17,7 +17,7 @@ namespace SNTN
                 for (int i = 0; i < postsAmount - 1; ++i)
                 {
                     postTime = sdt.AddHours(i);
-                    int offset = -5 + rnd.Next(11);
+                    int offset = rnd.Next(5, 11);
                     postTime = postTime.AddMinutes(offset);
                     curricular.Enqueue((postTime.Hour, postTime.Minute));
                 }

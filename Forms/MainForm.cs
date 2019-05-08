@@ -1,8 +1,6 @@
-using Extensions;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Collections.Generic;
 
 namespace SNTN
 {
@@ -48,6 +46,7 @@ namespace SNTN
             GroupsComboBox.Enabled = !isWorking;
             ChoosePathButton.Enabled = !isWorking;
             OpenCalendarButton.Enabled = !isWorking;
+            MainButton.Enabled = true;
             MainButton.Text = isWorking ? "Отменить" : "Начать";
         }
             
@@ -78,64 +77,78 @@ namespace SNTN
 
         private void AskToDelete(string path, int amount)
         {
-            var dr = MessageBox.Show(caption: "Подтвердите удаление",
+            if (amount > 0)
+            {
+                var dr = MessageBox.Show(caption: "Подтверждение действия",
                                      text: "Картинки загружены в отложку. Удалить их из папки?",
                                      buttons: MessageBoxButtons.YesNo);
-            if (dr == DialogResult.Yes)
-            {
-                var di = new System.IO.DirectoryInfo(path);
-                var fi = di.GetFiles();
-                for (int i = 0; i < amount; ++i)
+                if (dr == DialogResult.Yes)
                 {
-                    fi[i].Delete();
+                    var di = new System.IO.DirectoryInfo(path);
+                    var fi = di.GetFiles();
+                    for (int i = 0; i < amount; ++i)
+                    {
+                        fi[i].Delete();
+                    }
                 }
             }
         }
 
         public static void ShowErrorMessage(Exception e)
         {
-            System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-            string path = System.IO.Path.GetDirectoryName(asm.Location) + 
-                          $"{DateTime.Now.ToString("hh-mm--dd-MM")}.log";
-            System.IO.File.CreateText(path);
-            using (var sw = new System.IO.StreamWriter(path))
-            {
-                sw.WriteLine(e.StackTrace);
-            };
             MessageBox.Show("Произошла ошибка!\r" +
-                            $"Лог сохранён в {path}.\r" +
-                            $"Программа попробует продолжить работу.");
+                            $"{e.StackTrace}.\r" +
+                            $"Нажмите OK и программа попробует продолжить работу.");
         }
         
+        private bool IsWorking
+        {
+            get
+            {
+                return PostingProgressBar.Value != 0 && !string.IsNullOrWhiteSpace(StatusLabel.Text);
+            }
+        }
+
+        System.Threading.CancellationTokenSource cts = new System.Threading.CancellationTokenSource();
+
         private async void MainButton_Click(object sender, EventArgs e)
         {
-            
-
-            var barProgress = new Progress<int>(i => PostingProgressBar.Value = i);
-            var statusProgress = new Progress<string>(i => StatusLabel.Text = i);
-            long groupId = Groups[GroupsComboBox.SelectedIndex].Id;
-            long ownerId = groupId * -1;
-            string pathToPhotos = PathToPhotosTextBox.Text;
-            SwitchControls(true);
-                
-            SaveSettings(pathToPhotos);
-            var curricular = Core.Curricular.GetCurricular(Date);
-            int postsAmount = curricular.Length;
-            PostingProgressBar.Maximum = postsAmount;
-            if (IsThereEnoughPhotos(pathToPhotos, postsAmount))
+            if (IsWorking)
             {
-                var finishedProgress = new Progress<bool>(i =>
+                var dr = MessageBox.Show(caption: "Потдверждение",
+                                         text: "Отменить загрузку?",
+                                         buttons: MessageBoxButtons.YesNo);
+                if (dr == DialogResult.Yes)
                 {
-                    if (i)
+                    StatusLabel.Text = "Отменяем...";
+                    MainButton.Enabled = false;
+                    cts.Cancel();
+                }
+            }
+            else
+            {
+                var barProgress = new Progress<int>(i => PostingProgressBar.Value = i);
+                var statusProgress = new Progress<string>(i => StatusLabel.Text = i);
+                long groupId = Groups[GroupsComboBox.SelectedIndex].Id;
+                long ownerId = groupId * -1;
+                string pathToPhotos = PathToPhotosTextBox.Text;
+                SwitchControls(true);
+                SaveSettings(pathToPhotos);
+                var curricular = Core.Curricular.GetCurricular(Date);
+                int postsAmount = curricular.Length;
+                PostingProgressBar.Maximum = postsAmount;
+                if (IsThereEnoughPhotos(pathToPhotos, postsAmount))
+                {
+                    var finishedProgress = new Progress<int>(i =>
                     {
-                        AskToDelete(pathToPhotos, postsAmount);
+                        AskToDelete(pathToPhotos, i);
                         SwitchControls(false);
-                    }
-                });
-                await Task.Factory.StartNew(() =>
-                    Core.VK.AddPosts(api, pathToPhotos, curricular, Date, groupId,
-                                        barProgress, statusProgress, finishedProgress),
-                    TaskCreationOptions.LongRunning);
+                    });
+                    var task = await Task.Factory.StartNew(() =>
+                        Core.VK.AddPosts(api, pathToPhotos, curricular, Date, groupId,
+                                         barProgress, statusProgress, finishedProgress, cts.Token),
+                        TaskCreationOptions.LongRunning);
+                }
             }
         }
 
