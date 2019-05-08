@@ -13,7 +13,15 @@ namespace SNTN
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new LoginForm());
+            //костыль пиздец, но мне ща не до этого
+            try
+            {
+                Application.Run(new LoginForm());
+            }
+            catch (ObjectDisposedException)
+            {
+                
+            }
         }
     }
 }

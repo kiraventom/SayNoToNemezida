@@ -30,8 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.MainTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.GroupIdLabel = new System.Windows.Forms.Label();
-            this.GroupIdTextBox = new System.Windows.Forms.TextBox();
+            this.GroupLabel = new System.Windows.Forms.Label();
             this.MainButton = new System.Windows.Forms.Button();
             this.PathToPhotosLabel = new System.Windows.Forms.Label();
             this.PathToPhotosTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
@@ -42,6 +41,7 @@
             this.StatusTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.StatusLabel = new System.Windows.Forms.Label();
             this.FolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.GroupsComboBox = new System.Windows.Forms.ComboBox();
             this.MainTableLayoutPanel.SuspendLayout();
             this.PathToPhotosTableLayoutPanel.SuspendLayout();
             this.StatusTableLayoutPanel.SuspendLayout();
@@ -51,14 +51,14 @@
             // 
             this.MainTableLayoutPanel.ColumnCount = 1;
             this.MainTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.MainTableLayoutPanel.Controls.Add(this.GroupIdLabel, 0, 0);
-            this.MainTableLayoutPanel.Controls.Add(this.GroupIdTextBox, 0, 1);
+            this.MainTableLayoutPanel.Controls.Add(this.GroupLabel, 0, 0);
             this.MainTableLayoutPanel.Controls.Add(this.MainButton, 0, 7);
             this.MainTableLayoutPanel.Controls.Add(this.PathToPhotosLabel, 0, 2);
             this.MainTableLayoutPanel.Controls.Add(this.PathToPhotosTableLayoutPanel, 0, 3);
             this.MainTableLayoutPanel.Controls.Add(this.PostingProgressBar, 0, 5);
             this.MainTableLayoutPanel.Controls.Add(this.OpenCalendarButton, 0, 4);
             this.MainTableLayoutPanel.Controls.Add(this.StatusTableLayoutPanel, 0, 6);
+            this.MainTableLayoutPanel.Controls.Add(this.GroupsComboBox, 0, 1);
             this.MainTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainTableLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.MainTableLayoutPanel.Name = "MainTableLayoutPanel";
@@ -73,27 +73,18 @@
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.MainTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.MainTableLayoutPanel.Size = new System.Drawing.Size(239, 251);
+            this.MainTableLayoutPanel.Size = new System.Drawing.Size(239, 254);
             this.MainTableLayoutPanel.TabIndex = 0;
             // 
-            // GroupIdLabel
+            // GroupLabel
             // 
-            this.GroupIdLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.GroupIdLabel.AutoSize = true;
-            this.GroupIdLabel.Location = new System.Drawing.Point(93, 6);
-            this.GroupIdLabel.Name = "GroupIdLabel";
-            this.GroupIdLabel.Size = new System.Drawing.Size(53, 13);
-            this.GroupIdLabel.TabIndex = 0;
-            this.GroupIdLabel.Text = "Group ID:";
-            // 
-            // GroupIdTextBox
-            // 
-            this.GroupIdTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GroupIdTextBox.Location = new System.Drawing.Point(3, 28);
-            this.GroupIdTextBox.MaxLength = 12;
-            this.GroupIdTextBox.Name = "GroupIdTextBox";
-            this.GroupIdTextBox.Size = new System.Drawing.Size(233, 20);
-            this.GroupIdTextBox.TabIndex = 1;
+            this.GroupLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.GroupLabel.AutoSize = true;
+            this.GroupLabel.Location = new System.Drawing.Point(97, 6);
+            this.GroupLabel.Name = "GroupLabel";
+            this.GroupLabel.Size = new System.Drawing.Size(45, 13);
+            this.GroupLabel.TabIndex = 0;
+            this.GroupLabel.Text = "Группа:";
             // 
             // MainButton
             // 
@@ -101,7 +92,7 @@
             this.MainButton.Enabled = false;
             this.MainButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.MainButton.ForeColor = System.Drawing.Color.Black;
-            this.MainButton.Location = new System.Drawing.Point(3, 214);
+            this.MainButton.Location = new System.Drawing.Point(3, 217);
             this.MainButton.Name = "MainButton";
             this.MainButton.Size = new System.Drawing.Size(233, 34);
             this.MainButton.TabIndex = 4;
@@ -143,7 +134,6 @@
             this.PathToPhotosTextBox.ReadOnly = true;
             this.PathToPhotosTextBox.Size = new System.Drawing.Size(192, 20);
             this.PathToPhotosTextBox.TabIndex = 4;
-            this.PathToPhotosTextBox.TextChanged += new System.EventHandler(this.PathToPhotosTextBox_TextChanged);
             // 
             // ChoosePathButton
             // 
@@ -189,24 +179,36 @@
             this.StatusTableLayoutPanel.Name = "StatusTableLayoutPanel";
             this.StatusTableLayoutPanel.RowCount = 1;
             this.StatusTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.StatusTableLayoutPanel.Size = new System.Drawing.Size(233, 30);
+            this.StatusTableLayoutPanel.Size = new System.Drawing.Size(233, 33);
             this.StatusTableLayoutPanel.TabIndex = 10;
             // 
             // StatusLabel
             // 
             this.StatusLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.StatusLabel.AutoSize = true;
-            this.StatusLabel.Location = new System.Drawing.Point(3, 8);
+            this.StatusLabel.Location = new System.Drawing.Point(3, 10);
             this.StatusLabel.Name = "StatusLabel";
             this.StatusLabel.Size = new System.Drawing.Size(0, 13);
             this.StatusLabel.TabIndex = 11;
             this.StatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // GroupsComboBox
+            // 
+            this.GroupsComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GroupsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.GroupsComboBox.FormattingEnabled = true;
+            this.GroupsComboBox.Location = new System.Drawing.Point(3, 28);
+            this.GroupsComboBox.MaxDropDownItems = 20;
+            this.GroupsComboBox.Name = "GroupsComboBox";
+            this.GroupsComboBox.Size = new System.Drawing.Size(233, 21);
+            this.GroupsComboBox.TabIndex = 11;
+            this.GroupsComboBox.SelectedIndexChanged += new System.EventHandler(this.GroupsComboBox_SelectedIndexChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(239, 251);
+            this.ClientSize = new System.Drawing.Size(239, 254);
             this.Controls.Add(this.MainTableLayoutPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -228,8 +230,7 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel MainTableLayoutPanel;
-        private System.Windows.Forms.Label GroupIdLabel;
-        private System.Windows.Forms.TextBox GroupIdTextBox;
+        private System.Windows.Forms.Label GroupLabel;
         private System.Windows.Forms.Button MainButton;
         private System.Windows.Forms.Label PathToPhotosLabel;
         private System.Windows.Forms.TableLayoutPanel PathToPhotosTableLayoutPanel;
@@ -240,6 +241,7 @@
         private System.Windows.Forms.Button OpenCalendarButton;
         private System.Windows.Forms.TableLayoutPanel StatusTableLayoutPanel;
         private System.Windows.Forms.Label StatusLabel;
+        private System.Windows.Forms.ComboBox GroupsComboBox;
     }
 }
 

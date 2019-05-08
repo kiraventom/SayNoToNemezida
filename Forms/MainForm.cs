@@ -2,6 +2,7 @@ using Extensions;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace SNTN
 {
@@ -15,11 +16,22 @@ namespace SNTN
             {
                 AccessToken = token
             });
-            //GroupIdTextBox.Text = Properties.Settings.Default.GroupId.ToString();
-            PathToPhotosTextBox.Text = Properties.Settings.Default.PhotosDirPath;
 
+            Groups = api.Groups.Get(new VkNet.Model.RequestParams.GroupsGetParams
+            {
+                Filter = VkNet.Enums.Filters.GroupsFilters.Moderator,
+                Extended = true
+            });
+            foreach (var group in Groups)
+            {
+                GroupsComboBox.Items.Add(group.Name);
+            }
+            
+            PathToPhotosTextBox.Text = Properties.Settings.Default.PhotosDirPath;
             OpenCalendarButton.Text = Constants.Dates.CorrectMinimumDateTime.ToString("dd/MM/yyyy");
         }
+
+        private VkNet.Utils.VkCollection<VkNet.Model.Group> Groups { get; set; }
 
         VkNet.VkApi api = new VkNet.VkApi();
 
@@ -33,11 +45,10 @@ namespace SNTN
 
         private void SwitchControls(bool isWorking)
         {
-            GroupIdTextBox.Enabled = !isWorking;
-            //MainButton.Text = isWorking ? "Отменить" : "Начать";
-            MainButton.Enabled = !isWorking;
+            GroupsComboBox.Enabled = !isWorking;
             ChoosePathButton.Enabled = !isWorking;
             OpenCalendarButton.Enabled = !isWorking;
+            MainButton.Text = isWorking ? "Отменить" : "Начать";
         }
             
         private bool IsThereEnoughPhotos(string path, int amount)
@@ -98,13 +109,14 @@ namespace SNTN
         
         private async void MainButton_Click(object sender, EventArgs e)
         {
+            
+
             var barProgress = new Progress<int>(i => PostingProgressBar.Value = i);
             var statusProgress = new Progress<string>(i => StatusLabel.Text = i);
-            long groupId = GroupIdTextBox.Text.ToInt();
+            long groupId = Groups[GroupsComboBox.SelectedIndex].Id;
             long ownerId = groupId * -1;
             string pathToPhotos = PathToPhotosTextBox.Text;
-            GroupIdTextBox.Text = groupId.ToString();
-            SwitchControls(false);
+            SwitchControls(true);
                 
             SaveSettings(pathToPhotos);
             var curricular = Core.Curricular.GetCurricular(Date);
@@ -117,11 +129,11 @@ namespace SNTN
                     if (i)
                     {
                         AskToDelete(pathToPhotos, postsAmount);
-                        SwitchControls(true);
+                        SwitchControls(false);
                     }
                 });
                 await Task.Factory.StartNew(() =>
-                    Core.VK.AddPosts(api, pathToPhotos, curricular, Date, 
+                    Core.VK.AddPosts(api, pathToPhotos, curricular, Date, groupId,
                                         barProgress, statusProgress, finishedProgress),
                     TaskCreationOptions.LongRunning);
             }
@@ -135,19 +147,6 @@ namespace SNTN
             }
         }
 
-        private void PathToPhotosTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(PathToPhotosTextBox.Text) &&
-                !string.IsNullOrEmpty(GroupIdTextBox.Text))
-            {
-                MainButton.Enabled = true;
-            }
-            else
-            {
-                MainButton.Enabled = false;
-            }
-        }
-
         private void OpenCalendarButton_Click(object sender, EventArgs e)
         {
             using (var calendarForm = new CalendarForm(Constants.Dates.CorrectMinimumDateTime))
@@ -158,6 +157,20 @@ namespace SNTN
                     OpenCalendarButton.Text = calendarForm.SelectedDate.ToString("dd/MM/yyyy");
                     Date = calendarForm.SelectedDate;
                 }
+            }
+        }
+
+        private void GroupsComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(PathToPhotosTextBox.Text) &&
+                !string.IsNullOrEmpty(GroupsComboBox.SelectedItem.ToString()))
+            { 
+            
+                MainButton.Enabled = true;
+            }
+            else
+            {
+                MainButton.Enabled = false;
             }
         }
     }    

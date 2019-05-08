@@ -14,6 +14,7 @@ namespace SNTN
                                                     string pathToDir, 
                                                     (int h, int m)[] curricular,
                                                     DateTime publishDate,
+                                                    long groupId,
                                                     IProgress<int> barProgress,
                                                     IProgress<string> statusProgress,
                                                     IProgress<bool> finishedProgress)
@@ -34,15 +35,15 @@ namespace SNTN
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Конвертируем картинку...");
                         var imageAsByteArray = editedPhoto.ToByteArray();
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Получаем адрес сервера...");
-                        var usi = api.Photo.GetWallUploadServer(Properties.Settings.Default.GroupId);
+                        var usi = api.Photo.GetWallUploadServer(groupId);
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Загружаем картинку на сервер...");
                         var rspns = await UploadImage(usi.UploadUrl, imageAsByteArray);
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Получаем адрес картинки...");
-                        var wallPhotos = api.Photo.SaveWallPhoto(rspns, null, (ulong)Properties.Settings.Default.GroupId);
+                        var wallPhotos = api.Photo.SaveWallPhoto(rspns, null, (ulong)groupId);
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Постим...");
                         api.Wall.Post(new VkNet.Model.RequestParams.WallPostParams
                         {
-                            OwnerId = Properties.Settings.Default.OwnerId,
+                            OwnerId = -groupId,
                             FromGroup = true,
                             Message = caption,
                             PublishDate = new DateTime(publishDate.Year,
