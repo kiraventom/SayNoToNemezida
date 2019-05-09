@@ -110,7 +110,7 @@ namespace SNTN
         {
             if (IsWorking)
             {
-                var dr = MessageBox.Show(caption: "Потдверждение",
+                var dr = MessageBox.Show(caption: "Подтверждение",
                                          text: "Отменить загрузку?",
                                          buttons: MessageBoxButtons.YesNo);
                 if (dr == DialogResult.Yes)
@@ -143,6 +143,10 @@ namespace SNTN
                         Core.VK.AddPosts(api, pathToPhotos, curricular, Date, groupId,
                                          barProgress, statusProgress, finishedProgress, cts.Token),
                         System.Threading.Tasks.TaskCreationOptions.LongRunning);
+                }
+                else
+                {
+                    SwitchControls(false);
                 }
             }
         }
@@ -205,6 +209,19 @@ namespace SNTN
             else
             {
                 DialogResult = DialogResult.Yes;
+            }
+        }
+
+        private void PathToPhotosTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(PathToPhotosTextBox.Text) &&
+                !string.IsNullOrEmpty(GroupsComboBox.SelectedItem.ToString()))
+            {
+                MainButton.Enabled = true;
+            }
+            else
+            {
+                MainButton.Enabled = false;
             }
         }
     }    

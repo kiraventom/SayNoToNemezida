@@ -138,6 +138,7 @@
             this.PathToPhotosTextBox.ReadOnly = true;
             this.PathToPhotosTextBox.Size = new System.Drawing.Size(192, 20);
             this.PathToPhotosTextBox.TabIndex = 4;
+            this.PathToPhotosTextBox.TextChanged += new System.EventHandler(this.PathToPhotosTextBox_TextChanged);
             // 
             // ChoosePathButton
             // 
@@ -229,7 +230,7 @@
             // ResetAccountToolStripMenuItem
             // 
             this.ResetAccountToolStripMenuItem.Name = "ResetAccountToolStripMenuItem";
-            this.ResetAccountToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ResetAccountToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.ResetAccountToolStripMenuItem.Text = "Сбросить аккаунт";
             this.ResetAccountToolStripMenuItem.Click += new System.EventHandler(this.ResetAccountToolStripMenuItem_Click);
             // 

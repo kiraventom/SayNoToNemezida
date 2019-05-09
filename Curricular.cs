@@ -9,8 +9,8 @@ namespace SNTN
             public static (int h, int m)[] GetCurricular(DateTimeOffset? startDateTime)
             {
                 var curricular = new System.Collections.Generic.Queue<(int h, int m)>();
-                DateTimeOffset postTime = DateTime.Now;
                 DateTimeOffset sdt = (startDateTime ?? Constants.Dates.StartDateTime);
+                DateTimeOffset postTime = DateTime.Now;
                 Random rnd = new Random();
                 int postsAmount = CalculatePostsAmount(startDateTime);
                 for (int i = 0; i < postsAmount - 1; ++i)

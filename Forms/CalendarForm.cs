@@ -16,12 +16,28 @@ namespace SNTN
 
         private void MainMonthCalendar_DateSelected(object sender, DateRangeEventArgs e)
         {
-            SelectedDate = new DateTime (MainMonthCalendar.SelectionStart.Year,
-                                         MainMonthCalendar.SelectionStart.Month,
-                                         MainMonthCalendar.SelectionStart.Day,
-                                         DateTime.Now.Hour, 
-                                         DateTime.Now.Minute,
-                                         DateTime.Now.Second);
+            if (MainMonthCalendar.SelectionStart.Year == DateTime.Now.Year &&
+                MainMonthCalendar.SelectionStart.Month == DateTime.Now.Month &&
+                MainMonthCalendar.SelectionStart.Day == DateTime.Now.Day)
+            {
+                SelectedDate = new DateTime(MainMonthCalendar.SelectionStart.Year,
+                                            MainMonthCalendar.SelectionStart.Month,
+                                            MainMonthCalendar.SelectionStart.Day,
+                                            DateTime.Now.Hour,
+                                            DateTime.Now.Minute,
+                                            DateTime.Now.Second);
+            }
+            else
+            {
+                
+                SelectedDate = new DateTime(MainMonthCalendar.SelectionStart.Year,
+                                            MainMonthCalendar.SelectionStart.Month,
+                                            MainMonthCalendar.SelectionStart.Day,
+                                            8,
+                                            0,
+                                            0);
+            }
+            
             DialogResult = DialogResult.OK;
             Close();
         }
