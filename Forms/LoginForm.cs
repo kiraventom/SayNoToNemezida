@@ -9,14 +9,6 @@ namespace SNTN
         {
             InitializeComponent();
             AppIdTextBox.Text = Properties.Settings.Default.AppId;
-            if (!string.IsNullOrWhiteSpace(AppIdTextBox.Text))
-            {
-                TryLogin();
-            }
-            else
-            {
-                LoginButton.Enabled = true;
-            }
         }
 
         ToolTip toolTip = new ToolTip();
@@ -39,7 +31,7 @@ namespace SNTN
             }
         }
 
-        private void TryLogin()
+        private bool TryLogin()
         {
             string appId = AppIdTextBox.Text;
             var sb = new System.Text.StringBuilder();
@@ -55,14 +47,22 @@ namespace SNTN
                 Properties.Settings.Default.Save();
                 using (var mainForm = new MainForm(token))
                 {
-                    mainForm.ShowDialog();
+                    var dr = mainForm.ShowDialog();
+                    bool isResetRequested = dr == DialogResult.Yes;
+                    if (isResetRequested)
+                    {
+                        #region StackOverflow magic
+                        System.Diagnostics.Process.Start("CMD.exe", "/C RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 2");
+                        #endregion
+                    }
                 }
-                Close();
+                return true;
             }
             else
             {
                 AppIdTextBox.Enabled = true;
                 LoginButton.Enabled = true;
+                return false;
             }
         }
 
@@ -78,13 +78,32 @@ namespace SNTN
             }
             else
             {
-                TryLogin();
+                if (TryLogin())
+                {
+                    Close();
+                }
             }
         }
 
         private void LoginForm_Move(object sender, System.EventArgs e)
         {
             toolTip.RemoveAll();
+        }
+
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(AppIdTextBox.Text))
+            {
+                Opacity = 0;
+                if (TryLogin())
+                {
+                    Close();
+                }
+            }
+            else
+            {
+                LoginButton.Enabled = true;
+            }
         }
     }
 }

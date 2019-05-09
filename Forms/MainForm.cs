@@ -186,5 +186,32 @@ namespace SNTN
                 MainButton.Enabled = false;
             }
         }
+
+        private bool IsResetRequired { get; set; } = false;
+
+        private void ResetAccountToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var dr = MessageBox.Show(caption: "Подтверждение действия",
+                                     text: "Вы уверены, что хотите выйти из аккаунта?",
+                                     buttons: MessageBoxButtons.YesNo);
+            if (dr == DialogResult.Yes)
+            {
+                IsResetRequired = true;
+                Properties.Settings.Default.Reset();
+                Close();
+            }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (IsResetRequired == false)
+            {
+                DialogResult = DialogResult.No;
+            }
+            else
+            {
+                DialogResult = DialogResult.Yes;
+            }
+        }
     }    
 }

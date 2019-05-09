@@ -100,6 +100,7 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Вход ВК";
+            this.Load += new System.EventHandler(this.LoginForm_Load);
             this.Move += new System.EventHandler(this.LoginForm_Move);
             this.MainTableLayoutPanel.ResumeLayout(false);
             this.MainTableLayoutPanel.PerformLayout();

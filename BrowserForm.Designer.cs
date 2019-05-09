@@ -37,7 +37,7 @@
             this.MainWebBrowser.Location = new System.Drawing.Point(0, 0);
             this.MainWebBrowser.MinimumSize = new System.Drawing.Size(20, 20);
             this.MainWebBrowser.Name = "MainWebBrowser";
-            this.MainWebBrowser.Size = new System.Drawing.Size(606, 380);
+            this.MainWebBrowser.Size = new System.Drawing.Size(659, 356);
             this.MainWebBrowser.TabIndex = 0;
             this.MainWebBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.MainWebBrowser_DocumentCompleted);
             // 
@@ -45,12 +45,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(606, 380);
+            this.ClientSize = new System.Drawing.Size(659, 356);
             this.Controls.Add(this.MainWebBrowser);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "BrowserForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Вход ВК";
+            this.Load += new System.EventHandler(this.BrowserForm_Load);
             this.ResumeLayout(false);
 
         }

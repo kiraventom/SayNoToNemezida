@@ -18,6 +18,7 @@ namespace SNTN
             string url = MainWebBrowser.Url.ToString();
             if (url.Contains(@"#access_token="))
             {
+                Opacity = 0;
                 Token = url.Substring(url.IndexOf('=') + 1, 85);
                 var progress = new System.Progress<bool>(i => Close());
                 await Task.Factory.StartNew(() => CloseAfterTimeOut(progress), TaskCreationOptions.LongRunning);
@@ -30,6 +31,11 @@ namespace SNTN
             DialogResult = DialogResult.OK;
             progress.Report(true);
             return Task.CompletedTask;
+        }
+
+        private void BrowserForm_Load(object sender, System.EventArgs e)
+        {
+
         }
     }
 }
