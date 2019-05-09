@@ -51,7 +51,6 @@
             this.Name = "BrowserForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Вход ВК";
-            this.Load += new System.EventHandler(this.BrowserForm_Load);
             this.ResumeLayout(false);
 
         }

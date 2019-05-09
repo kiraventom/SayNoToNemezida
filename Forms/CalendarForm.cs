@@ -8,6 +8,7 @@ namespace SNTN
         public CalendarForm(DateTime minimumDate)
         {
             InitializeComponent();
+            Icon = Properties.Resources.icon;
             MainMonthCalendar.MinDate = minimumDate;
         }
 
@@ -23,11 +24,6 @@ namespace SNTN
                                          DateTime.Now.Second);
             DialogResult = DialogResult.OK;
             Close();
-        }
-
-        private void CalendarForm_KeyDown(object sender, KeyEventArgs e)
-        {
-            
         }
 
         private void MainMonthCalendar_KeyDown(object sender, KeyEventArgs e)

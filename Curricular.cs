@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace SNTN
 {
@@ -9,7 +8,7 @@ namespace SNTN
         {
             public static (int h, int m)[] GetCurricular(DateTimeOffset? startDateTime)
             {
-                var curricular = new Queue<(int h, int m)>();
+                var curricular = new System.Collections.Generic.Queue<(int h, int m)>();
                 DateTimeOffset postTime = DateTime.Now;
                 DateTimeOffset sdt = (startDateTime ?? Constants.Dates.StartDateTime);
                 Random rnd = new Random();

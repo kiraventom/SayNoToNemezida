@@ -61,22 +61,22 @@ namespace SNTN.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Icon Untitled_1 {
+        internal static System.Drawing.Bitmap group175746201 {
             get {
-                object obj = ResourceManager.GetObject("Untitled_1", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                object obj = ResourceManager.GetObject("group175746201", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Bitmap watermark {
+        internal static System.Drawing.Icon icon {
             get {
-                object obj = ResourceManager.GetObject("watermark", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                object obj = ResourceManager.GetObject("icon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
     }

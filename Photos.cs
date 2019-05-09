@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Extensions;
+using System;
 using System.Drawing;
 using System.IO;
-using Extensions;
 
 namespace SNTN
 {
@@ -13,7 +12,7 @@ namespace SNTN
             public static Bitmap[] GetPhotosFromPath(string path, int amount)
             {
                 var di = new DirectoryInfo(path);
-                var photos = new List<Bitmap>();
+                var photos = new System.Collections.Generic.List<Bitmap>();
 
                 FileInfo[] array = di.GetFiles();
 
@@ -32,17 +31,20 @@ namespace SNTN
                 return photos.ToArray();
             }
 
-            public static Bitmap EditPhoto(Bitmap originalPhoto)
+            public static Bitmap EditPhoto(Bitmap originalPhoto, long groupId)
             {
                 Random rnd = new Random();
-                Bitmap watermark = Properties.Resources.watermark;
                 var bcm = (ImageExtensions.BrightnessChangeMode)rnd.Next(1);
                 var img = new Bitmap(originalPhoto);
                 img = img.ChangeBrightness(bcm);
                 img = img.ChangeTone();
                 img = img.MirrorHorizontal();
                 img = img.AddFrame();
-                img = img.AddWatermark(watermark, 3);
+                //временный костыль
+                if (groupId == 175746201)
+                {
+                    img = img.AddWatermark(Properties.Resources.group175746201, 3);
+                }
                 return img;
             }
         }

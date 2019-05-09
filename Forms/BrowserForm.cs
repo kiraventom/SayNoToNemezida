@@ -8,6 +8,7 @@ namespace SNTN
         public BrowserForm(System.Uri uri)
         {
             InitializeComponent();
+            Icon = Properties.Resources.icon;
             MainWebBrowser.Url = uri;
         }
 
@@ -31,11 +32,6 @@ namespace SNTN
             DialogResult = DialogResult.OK;
             progress.Report(true);
             return Task.CompletedTask;
-        }
-
-        private void BrowserForm_Load(object sender, System.EventArgs e)
-        {
-
         }
     }
 }

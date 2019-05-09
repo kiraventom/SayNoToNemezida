@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SNTN
@@ -9,12 +8,11 @@ namespace SNTN
         public MainForm(string token)
         {
             InitializeComponent();
-            
+            Icon = Properties.Resources.icon;
             api.Authorize(new VkNet.Model.ApiAuthParams
             {
                 AccessToken = token
             });
-
             Groups = api.Groups.Get(new VkNet.Model.RequestParams.GroupsGetParams
             {
                 Filter = VkNet.Enums.Filters.GroupsFilters.Moderator,
@@ -24,15 +22,12 @@ namespace SNTN
             {
                 GroupsComboBox.Items.Add(group.Name);
             }
-            
             PathToPhotosTextBox.Text = Properties.Settings.Default.PhotosDirPath;
             OpenCalendarButton.Text = Constants.Dates.CorrectMinimumDateTime.ToString("dd/MM/yyyy");
         }
 
         private VkNet.Utils.VkCollection<VkNet.Model.Group> Groups { get; set; }
-
         VkNet.VkApi api = new VkNet.VkApi();
-
         private static DateTime Date { get; set; } = Constants.Dates.CorrectMinimumDateTime;
 
         private void SaveSettings(string path)
@@ -144,10 +139,10 @@ namespace SNTN
                         AskToDelete(pathToPhotos, i);
                         SwitchControls(false);
                     });
-                    var task = await Task.Factory.StartNew(() =>
+                    var task = await System.Threading.Tasks.Task.Factory.StartNew(() =>
                         Core.VK.AddPosts(api, pathToPhotos, curricular, Date, groupId,
                                          barProgress, statusProgress, finishedProgress, cts.Token),
-                        TaskCreationOptions.LongRunning);
+                        System.Threading.Tasks.TaskCreationOptions.LongRunning);
                 }
             }
         }
@@ -178,7 +173,6 @@ namespace SNTN
             if (!string.IsNullOrEmpty(PathToPhotosTextBox.Text) &&
                 !string.IsNullOrEmpty(GroupsComboBox.SelectedItem.ToString()))
             { 
-            
                 MainButton.Enabled = true;
             }
             else

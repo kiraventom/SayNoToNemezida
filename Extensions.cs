@@ -22,17 +22,13 @@ namespace Extensions
             var separatorIndex = str.IndexOf(separator);
             var day = int.Parse(str.Substring(0, separatorIndex));
             str = str.Remove(0, separatorIndex + 1);
-
             separatorIndex = str.IndexOf(separator);
             var month = int.Parse(str.Substring(0, separatorIndex));
             str = str.Remove(0, separatorIndex + 1);
-
             var year = int.Parse(str.Substring(0));
-
             return new DateTime(year, month, day);
         }
     }
-
 
     public static class ImageExtensions
     {

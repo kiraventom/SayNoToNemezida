@@ -1,6 +1,5 @@
 ﻿using Extensions;
 using System;
-using System.Drawing;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -21,7 +20,7 @@ namespace SNTN
                                                     System.Threading.CancellationToken ct)
             {
                 int postsAmount = curricular.Length;
-                Bitmap[] photos = Photos.GetPhotosFromPath(pathToDir, postsAmount);
+                System.Drawing.Bitmap[] photos = Photos.GetPhotosFromPath(pathToDir, postsAmount);
                 
                 int i;
                 for (i = 0; i < postsAmount; ++i)
@@ -32,7 +31,7 @@ namespace SNTN
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Генерируем подпись...");
                         var caption = Constants.Strings.Caption;
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Редактируем картинку...");
-                        var editedPhoto = Photos.EditPhoto(photos[i]);
+                        var editedPhoto = Photos.EditPhoto(photos[i], groupId);
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Конвертируем картинку...");
                         var imageAsByteArray = editedPhoto.ToByteArray();
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Получаем адрес сервера...");
@@ -49,7 +48,6 @@ namespace SNTN
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Получаем адрес картинки...");
                         var wallPhotos = api.Photo.SaveWallPhoto(rspns, null, (ulong)groupId);
                         statusProgress.Report($"[{i + 1}/{postsAmount}] Постим...");
-                        var c = curricular[i];
                         api.Wall.Post(new VkNet.Model.RequestParams.WallPostParams
                         {
                             OwnerId = -groupId,

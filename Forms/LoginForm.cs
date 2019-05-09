@@ -8,6 +8,7 @@ namespace SNTN
         public LoginForm()
         {
             InitializeComponent();
+            Icon = Properties.Resources.icon;
             AppIdTextBox.Text = Properties.Settings.Default.AppId;
         }
 
