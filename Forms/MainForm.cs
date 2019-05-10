@@ -156,6 +156,14 @@ namespace SNTN
             if (FolderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
                 PathToPhotosTextBox.Text = FolderBrowserDialog.SelectedPath;
+                if (GroupsComboBox.SelectedIndex != -1)
+                {
+                    MainButton.Enabled = true;
+                }
+                else
+                {
+                    MainButton.Enabled = false;
+                }
             }
         }
 
@@ -175,7 +183,7 @@ namespace SNTN
         private void GroupsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(PathToPhotosTextBox.Text) &&
-                !string.IsNullOrEmpty(GroupsComboBox.SelectedItem.ToString()))
+                GroupsComboBox.SelectedIndex != -1)
             { 
                 MainButton.Enabled = true;
             }
@@ -209,19 +217,6 @@ namespace SNTN
             else
             {
                 DialogResult = DialogResult.Yes;
-            }
-        }
-
-        private void PathToPhotosTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(PathToPhotosTextBox.Text) &&
-                !string.IsNullOrEmpty(GroupsComboBox.SelectedItem.ToString()))
-            {
-                MainButton.Enabled = true;
-            }
-            else
-            {
-                MainButton.Enabled = false;
             }
         }
     }    

@@ -138,7 +138,6 @@
             this.PathToPhotosTextBox.ReadOnly = true;
             this.PathToPhotosTextBox.Size = new System.Drawing.Size(192, 20);
             this.PathToPhotosTextBox.TabIndex = 4;
-            this.PathToPhotosTextBox.TextChanged += new System.EventHandler(this.PathToPhotosTextBox_TextChanged);
             // 
             // ChoosePathButton
             // 
