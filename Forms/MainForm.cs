@@ -5,7 +5,7 @@ namespace SNTN
 {
     public partial class MainForm : Form
     {
-        private VkNet.VkApi _API { get; set} = new VkNet.VkApi();
+        private VkNet.VkApi _API { get; set; } = new VkNet.VkApi();
         private VkNet.Utils.VkCollection<VkNet.Model.Group> _Groups { get; set; }
         private DateTime _Date { get; set; } = Constants.Dates.CorrectMinimumDateTime;
         private bool _IsWorking { get; set; }
