@@ -8,79 +8,96 @@ namespace SNTN
         public LoginForm()
         {
             InitializeComponent();
-            Icon = Properties.Resources.icon;
-            AppIdTextBox.Text = Properties.Settings.Default.AppId;
         }
 
-        ToolTip toolTip = new ToolTip();
-
-        private bool GetTokenViaBrowser(Uri URL, out string token)
+        ToolTip _emptyFieldToolTip = new ToolTip()
         {
-            using (var browserForm = new BrowserForm(URL))
+            IsBalloon = true
+        };
+
+        private string GetTokenViaBrowser(Uri _url)
+        {
+            string _token;
+            using (var _browserForm = new BrowserForm(_url))
             {
-                var dr = browserForm.ShowDialog();
-                if (dr == DialogResult.OK)
+                bool _isLoginSuccessful = _browserForm.ShowDialog() == DialogResult.OK;
+                if (_isLoginSuccessful)
                 {
-                    token = browserForm.Token;
-                    return true;
+                    _token = _browserForm.Token;
                 }
                 else
                 {
-                    token = string.Empty;
-                    return false;
+                    _token = null;
+                }
+            }
+            return _token;
+        }
+
+        private void CleanCookies()
+        {
+            #region StackOverflow magic
+
+            System.Diagnostics.Process.Start("CMD.exe", "/C RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 2");
+
+            #endregion
+        }
+
+        private void OpenMainForm(string _token)
+        {
+            using (var _mainForm = new MainForm(_token))
+            {
+                var _mainFormDialogResult = _mainForm.ShowDialog();
+                bool _isResetRequested = _mainFormDialogResult == DialogResult.Yes;
+                if (_isResetRequested)
+                {
+                    Properties.Settings.Default.Reset();
+                    CleanCookies();
                 }
             }
         }
 
-        private bool TryLogin()
+        private bool TryLogin(string _appId, out string _token)
         {
-            string appId = AppIdTextBox.Text;
-            var sb = new System.Text.StringBuilder();
-            sb.Append(@"https://oauth.vk.com/authorize?client_id=");
-            sb.Append(appId);
-            sb.Append(@"&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=wall,groups,photos,offline&response_type=token&v=5.92");
-            var ub = new UriBuilder(sb.ToString());
-            string token = string.Empty;
-            if (GetTokenViaBrowser(ub.Uri, out token))
+            string _url = @"https://oauth.vk.com/authorize?client_id=" +
+                          $"{_appId}" +
+                          @"&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=wall,groups,photos,offline&response_type=token&v=5.92";
+            var _uriBuilder = new UriBuilder(_url);
+            _token = GetTokenViaBrowser(_uriBuilder.Uri);
+            bool _isLoginSuccessful = !string.IsNullOrWhiteSpace(_token);
+            if (_isLoginSuccessful)
             {
                 Hide();
                 Properties.Settings.Default.AppId = AppIdTextBox.Text;
                 Properties.Settings.Default.Save();
-                using (var mainForm = new MainForm(token))
-                {
-                    var dr = mainForm.ShowDialog();
-                    bool isResetRequested = dr == DialogResult.Yes;
-                    if (isResetRequested)
-                    {
-                        #region StackOverflow magic
-                        System.Diagnostics.Process.Start("CMD.exe", "/C RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 2");
-                        #endregion
-                    }
-                }
-                return true;
             }
             else
             {
                 AppIdTextBox.Enabled = true;
                 LoginButton.Enabled = true;
-                return false;
             }
+            return _isLoginSuccessful;
         }
 
         private void LoginButton_Click(object sender, System.EventArgs e)
         {
             AppIdTextBox.Enabled = false;
             LoginButton.Enabled = false;
-            toolTip.RemoveAll();
-            toolTip.IsBalloon = true;
+            _emptyFieldToolTip.RemoveAll();
+
             if (string.IsNullOrWhiteSpace(AppIdTextBox.Text))
             {
-                toolTip.Show("Введите ID приложения", AppIdTextBox, AppIdTextBox.Width * 4 / 5, -AppIdTextBox.Height * 2, 2000);
+                _emptyFieldToolTip.Show("Введите ID приложения", 
+                                        AppIdTextBox, 
+                                        AppIdTextBox.Width * 4 / 5, 
+                                        -AppIdTextBox.Height * 2, 
+                                        2000);
             }
             else
             {
-                if (TryLogin())
+                bool _isLoginSuccessful = TryLogin(AppIdTextBox.Text, out string _token);
+                if (_isLoginSuccessful)
                 {
+                    OpenMainForm(_token);
                     Close();
                 }
             }
@@ -88,16 +105,21 @@ namespace SNTN
 
         private void LoginForm_Move(object sender, System.EventArgs e)
         {
-            toolTip.RemoveAll();
+            _emptyFieldToolTip.RemoveAll();
         }
 
         private void LoginForm_Load(object sender, EventArgs e)
         {
+            Icon = Properties.Resources.icon;
+            AppIdTextBox.Text = Properties.Settings.Default.AppId;
+
             if (!string.IsNullOrWhiteSpace(AppIdTextBox.Text))
             {
                 Opacity = 0;
-                if (TryLogin())
+                bool _isLoginSuccessful = TryLogin(AppIdTextBox.Text, out string _token);
+                if (_isLoginSuccessful)
                 {
+                    OpenMainForm(_token);
                     Close();
                 }
             }

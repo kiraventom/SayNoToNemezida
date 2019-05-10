@@ -46,14 +46,14 @@ namespace SNTN
             {
                 get
                 {
-                    string caption = string.Empty;
-                    char[] invisibleChars = { '\u2003', '\u2009', '\u200c', '\u200d', '\u1160' };
-                    Random rnd = new Random();
-                    for (int i = 0; i < rnd.Next(10, 20); ++i)
+                    string _caption = string.Empty;
+                    char[] _invisibleChars = { '\u2003', '\u2009', '\u200c', '\u200d', '\u1160' };
+                    Random _random = new Random();
+                    for (int i = 0; i < _random.Next(10, 20); ++i)
                     {
-                        caption += invisibleChars[rnd.Next(5)];
+                        _caption += _invisibleChars[_random.Next(5)];
                     }
-                    return caption;
+                    return _caption;
                 }
             }
         }

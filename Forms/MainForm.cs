@@ -5,155 +5,159 @@ namespace SNTN
 {
     public partial class MainForm : Form
     {
-        public MainForm(string token)
+        private VkNet.VkApi _API { get; set} = new VkNet.VkApi();
+        private VkNet.Utils.VkCollection<VkNet.Model.Group> _Groups { get; set; }
+        private DateTime _Date { get; set; } = Constants.Dates.CorrectMinimumDateTime;
+        private bool _IsWorking { get; set; }
+        private System.Threading.CancellationTokenSource _CancellationTokenSource { get; set; } =
+            new System.Threading.CancellationTokenSource();
+        private bool _IsResetRequested { get; set; } = false;
+
+        public MainForm(string _token)
         {
             InitializeComponent();
-            Icon = Properties.Resources.icon;
-            api.Authorize(new VkNet.Model.ApiAuthParams
+
+            _API.Authorize(new VkNet.Model.ApiAuthParams
             {
-                AccessToken = token
+                AccessToken = _token
             });
-            Groups = api.Groups.Get(new VkNet.Model.RequestParams.GroupsGetParams
-            {
-                Filter = VkNet.Enums.Filters.GroupsFilters.Moderator,
-                Extended = true
-            });
-            foreach (var group in Groups)
-            {
-                GroupsComboBox.Items.Add(group.Name);
-            }
-            PathToPhotosTextBox.Text = Properties.Settings.Default.PhotosDirPath;
-            OpenCalendarButton.Text = Constants.Dates.CorrectMinimumDateTime.ToString("dd/MM/yyyy");
         }
 
-        private VkNet.Utils.VkCollection<VkNet.Model.Group> Groups { get; set; }
-        VkNet.VkApi api = new VkNet.VkApi();
-        private static DateTime Date { get; set; } = Constants.Dates.CorrectMinimumDateTime;
-
-        private void SaveSettings(string path)
+        private void SaveSettings(string _path)
         {
-            Properties.Settings.Default.PhotosDirPath = path;
+            Properties.Settings.Default.PhotosDirPath = _path;
             Properties.Settings.Default.Save();
         }
 
-        private void SwitchControls(bool isWorking)
+        private void SetAppWorkingMode(bool _isWorking)
         {
-            GroupsComboBox.Enabled = !isWorking;
-            ChoosePathButton.Enabled = !isWorking;
-            OpenCalendarButton.Enabled = !isWorking;
+            _IsWorking = _isWorking;
+            GroupsComboBox.Enabled = !_isWorking;
+            ChoosePathButton.Enabled = !_isWorking;
+            OpenCalendarButton.Enabled = !_isWorking;
             MainButton.Enabled = true;
-            MainButton.Text = isWorking ? "Отменить" : "Начать";
+            MainButton.Text = _isWorking ? "Отменить" : "Начать";
         }
             
-        private bool IsThereEnoughPhotos(string path, int amount)
+        private bool IsThereEnoughImages(string _path, int _requiredAmount)
         {
-            var di = new System.IO.DirectoryInfo(path);
-            System.IO.FileInfo[] array = di.GetFiles();
-            int count = 0;
-            foreach (var fi in array)
+            var _directoryInfo = new System.IO.DirectoryInfo(_path);
+            System.IO.FileInfo[] filesInfo = _directoryInfo.GetFiles();
+            int _imagesCount = 0;
+            foreach (var fileInfo in filesInfo)
             {
-                if (fi.Extension == ".jpg" ||
-                    fi.Extension == ".jpeg" ||
-                    fi.Extension == ".png")
+                if (fileInfo.Extension == ".jpg" ||
+                    fileInfo.Extension == ".jpeg" ||
+                    fileInfo.Extension == ".png")
                 {
-                    ++count;
+                    ++_imagesCount;
                 }
             }
-
-            bool isThereEnoughPhotos = count >= amount;
-            if (!isThereEnoughPhotos)
-            {
-                MessageBox.Show("Недостаточно файлов в папке. " +
-                                $"Необходимо минимум {amount} файлов" +
-                                " формата jpg, jpeg и/или png");
-            }
-            return isThereEnoughPhotos;
+        
+            bool isThereEnoughImages = _imagesCount >= _requiredAmount;
+            return isThereEnoughImages;
         }
 
-        private void AskToDelete(string path, int amount)
+        private void ConfirmDeletion(string _path, int _amount)
         {
-            if (amount > 0)
+            if (_amount > 0)
             {
-                var dr = MessageBox.Show(caption: "Подтверждение действия",
-                                     text: "Картинки загружены в отложку. Удалить их из папки?",
-                                     buttons: MessageBoxButtons.YesNo);
-                if (dr == DialogResult.Yes)
+                var _userChoice = 
+                    MessageBox.Show(caption: "Подтверждение действия",
+                                    text: $"{_amount} изображений загружено. Удалить их?",
+                                    buttons: MessageBoxButtons.YesNo);
+                if (_userChoice == DialogResult.Yes)
                 {
-                    var di = new System.IO.DirectoryInfo(path);
-                    var fi = di.GetFiles();
-                    for (int i = 0; i < amount; ++i)
+                    var _directoryInfo = new System.IO.DirectoryInfo(_path);
+                    var _filesInfo = _directoryInfo.GetFiles();
+                    for (int i = 0; i < _amount; ++i)
                     {
-                        fi[i].Delete();
+                        _filesInfo[i].Delete();
                     }
                 }
             }
         }
 
-        public static void ShowErrorMessage(Exception e)
+        public static void ShowVKErrorMessage(Exception e)
         {
-            MessageBox.Show("Произошла ошибка!\r" +
-                            $"{e.StackTrace}.\r" +
-                            $"Нажмите OK и программа попробует продолжить работу.");
+            MessageBox.Show("Произошла ошибка, свяазнная с ВК!\r\r" +
+                            $"{e.StackTrace}.\r\r" +
+                            "Нажмите OK и программа попробует продолжить работу.");
         }
-        
-        private bool IsWorking
+
+        private void CancelWorking()
         {
-            get
+            var _userChoice = MessageBox.Show(caption: "Подтверждение",
+                                              text: "Отменить загрузку?",
+                                              buttons: MessageBoxButtons.YesNo);
+            if (_userChoice == DialogResult.Yes)
             {
-                return PostingProgressBar.Value != 0 && !string.IsNullOrWhiteSpace(StatusLabel.Text);
+                StatusLabel.Text = "Отменяем...";
+                MainButton.Enabled = false;
+                _CancellationTokenSource.Cancel();
             }
         }
 
-        System.Threading.CancellationTokenSource cts = new System.Threading.CancellationTokenSource();
-
-        private async void MainButton_Click(object sender, EventArgs e)
+        private async void StartWorking()
         {
-            if (IsWorking)
+            var _barProgress = new Progress<int>(x => PostingProgressBar.Value = x);
+            var _statusProgress = new Progress<string>(x => StatusLabel.Text = x);
+            long _groupId = _Groups[GroupsComboBox.SelectedIndex].Id;
+            long _ownerId = _groupId * -1;
+            string _pathToPhotos = PathToPhotosTextBox.Text;
+
+            SetAppWorkingMode(true);
+            SaveSettings(_pathToPhotos);
+
+            var _curricular = Core.Curricular.GetCurricular(_Date);
+            int _postsAmount = _curricular.Length;
+            PostingProgressBar.Maximum = _postsAmount;
+
+            if (IsThereEnoughImages(_pathToPhotos, _postsAmount))
             {
-                var dr = MessageBox.Show(caption: "Подтверждение",
-                                         text: "Отменить загрузку?",
-                                         buttons: MessageBoxButtons.YesNo);
-                if (dr == DialogResult.Yes)
+                var _finishedProgress = new Progress<int>(x =>
                 {
-                    StatusLabel.Text = "Отменяем...";
-                    MainButton.Enabled = false;
-                    cts.Cancel();
-                }
+                    ConfirmDeletion(_pathToPhotos, x);
+                    SetAppWorkingMode(false);
+                });
+
+                await System.Threading.Tasks.Task.Factory.StartNew(
+                    () => Core.VkManager.AddPosts(_API,
+                                           _pathToPhotos,
+                                           _curricular,
+                                           _Date,
+                                           _groupId,
+                                           _barProgress,
+                                           _statusProgress,
+                                           _finishedProgress,
+                                           _CancellationTokenSource.Token),
+                    System.Threading.Tasks.TaskCreationOptions.LongRunning);
             }
             else
             {
-                var barProgress = new Progress<int>(i => PostingProgressBar.Value = i);
-                var statusProgress = new Progress<string>(i => StatusLabel.Text = i);
-                long groupId = Groups[GroupsComboBox.SelectedIndex].Id;
-                long ownerId = groupId * -1;
-                string pathToPhotos = PathToPhotosTextBox.Text;
-                SwitchControls(true);
-                SaveSettings(pathToPhotos);
-                var curricular = Core.Curricular.GetCurricular(Date);
-                int postsAmount = curricular.Length;
-                PostingProgressBar.Maximum = postsAmount;
-                if (IsThereEnoughPhotos(pathToPhotos, postsAmount))
-                {
-                    var finishedProgress = new Progress<int>(i =>
-                    {
-                        AskToDelete(pathToPhotos, i);
-                        SwitchControls(false);
-                    });
-                    var task = await System.Threading.Tasks.Task.Factory.StartNew(() =>
-                        Core.VK.AddPosts(api, pathToPhotos, curricular, Date, groupId,
-                                         barProgress, statusProgress, finishedProgress, cts.Token),
-                        System.Threading.Tasks.TaskCreationOptions.LongRunning);
-                }
-                else
-                {
-                    SwitchControls(false);
-                }
+                MessageBox.Show("Недостаточно изображений в папке. " +
+                                $"Необходимо минимум {_postsAmount} файлов" +
+                                " формата jpg, jpeg и/или png");
+                SetAppWorkingMode(false);
+            }
+        }
+
+        private void MainButton_Click(object sender, EventArgs e)
+        {
+            if (_IsWorking)
+            {
+                CancelWorking();
+            }
+            else
+            {
+                StartWorking();
             }
         }
 
         private void ChoosePathButton_Click(object sender, EventArgs e)
         {
-            if (FolderBrowserDialog.ShowDialog() == DialogResult.OK)
+            bool _isFolderChosen = FolderBrowserDialog.ShowDialog() == DialogResult.OK;
+            if (_isFolderChosen)
             {
                 PathToPhotosTextBox.Text = FolderBrowserDialog.SelectedPath;
                 if (GroupsComboBox.SelectedIndex != -1)
@@ -169,13 +173,13 @@ namespace SNTN
 
         private void OpenCalendarButton_Click(object sender, EventArgs e)
         {
-            using (var calendarForm = new CalendarForm(Constants.Dates.CorrectMinimumDateTime))
+            using (var _calendarForm = new CalendarForm(Constants.Dates.CorrectMinimumDateTime))
             {
-                var dr = calendarForm.ShowDialog();
-                if (dr == DialogResult.OK)
+                var _isDateSelected = _calendarForm.ShowDialog();
+                if (_isDateSelected == DialogResult.OK)
                 {
-                    OpenCalendarButton.Text = calendarForm.SelectedDate.ToString("dd/MM/yyyy");
-                    Date = calendarForm.SelectedDate;
+                    OpenCalendarButton.Text = _calendarForm.SelectedDate.ToString("dd/MM/yyyy");
+                    _Date = _calendarForm.SelectedDate;
                 }
             }
         }
@@ -193,31 +197,46 @@ namespace SNTN
             }
         }
 
-        private bool IsResetRequired { get; set; } = false;
-
         private void ResetAccountToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dr = MessageBox.Show(caption: "Подтверждение действия",
+            var _userChoice = MessageBox.Show(caption: "Подтверждение действия",
                                      text: "Вы уверены, что хотите выйти из аккаунта?",
                                      buttons: MessageBoxButtons.YesNo);
-            if (dr == DialogResult.Yes)
+            if (_userChoice == DialogResult.Yes)
             {
-                IsResetRequired = true;
-                Properties.Settings.Default.Reset();
+                _IsResetRequested = true;
                 Close();
             }
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (IsResetRequired == false)
-            {
-                DialogResult = DialogResult.No;
-            }
-            else
+            if (_IsResetRequested)
             {
                 DialogResult = DialogResult.Yes;
             }
+            else
+            {
+                DialogResult = DialogResult.No;
+            }
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            Icon = Properties.Resources.icon;
+
+            _Groups = _API.Groups.Get(new VkNet.Model.RequestParams.GroupsGetParams
+            {
+                Filter = VkNet.Enums.Filters.GroupsFilters.Moderator,
+                Extended = true
+            });
+            foreach (var _group in _Groups)
+            {
+                GroupsComboBox.Items.Add(_group.Name);
+            }
+
+            PathToPhotosTextBox.Text = Properties.Settings.Default.PhotosDirPath;
+            OpenCalendarButton.Text = Constants.Dates.CorrectMinimumDateTime.ToString("dd/MM/yyyy");
         }
     }    
 }
