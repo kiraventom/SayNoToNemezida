@@ -19,7 +19,6 @@ namespace SNTN
             if (_currentUrl.Contains(@"#access_token="))
             {
                 Opacity = 0;
-                DialogResult = DialogResult.OK;
                 const int _tokenLength = 85;
                 const char _charBeforeToken = '=';
                 Token = _currentUrl.Substring(_currentUrl.IndexOf(_charBeforeToken) + 1, _tokenLength);
@@ -36,6 +35,9 @@ namespace SNTN
             // we're dong this in a separate thread because Thread.Sleep in UI thread locks it 
             // and page is not shown
             System.Threading.Thread.Sleep(100);
+            // WTF?! if next line is moved to event handler, IE opens anyway, so I'll keep it here
+            // TODO: fix
+            DialogResult = DialogResult.OK;
             _finishedProgress.Report(true);
             return Task.CompletedTask;
         }
