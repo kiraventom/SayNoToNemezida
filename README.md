@@ -1,3 +1,3 @@
 # sntn
-Say No To Nemezida is a tool that helps to avoid the VK algorithm called Nemezida. 
-Deprecated, authorization method is outdated.
+Say No To Nemezida -- app that helps content creators of VKontakte to bypass destructive algorithm "Nemezida". Deprecated, new version at https://github.com/psvavvon/SNTN3
+
